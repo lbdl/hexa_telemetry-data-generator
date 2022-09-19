@@ -1,0 +1,47 @@
+# initial yml
+# defines a sequence generatot for message data
+# as used in the main coap service
+# meant to create a varying sequence of events to create
+# test databases for data visualisation etc
+
+# timeLine
+#-------------------------------------------------------------------------------- 
+# startOffset's are in %, therefore 0.1 represents 0.1%
+# of the entire sequence as a start position for the block. 
+#
+# e.g.
+# if maxInterval: 1000 and an offset value was 0.1 the offset
+# would represent 1 interval because 1000/100/10 = 1 so the 
+# eventBlock would begin after 1 timeIntervalSeconds had passed.
+#
+# each timeLine can be only one data type but there can be mutiple
+# timeLines, just define a new config following the same format.
+
+timeLine:
+  eventDataType:
+    - typeName: fooData
+      initialValue: 5.67
+  startTime:  "time string"
+  maxIntervals: 10000
+  timeIntervalSeconds: 600
+  driftFactor: 0.01
+  maxAllowedDrift: 0.1 
+  eventBlocks:
+    - startOffset: 0.1
+      endOffset: 
+      driftFactor:
+      maxAllowedDrift: 
+      timeIntervalSeconds:
+      resetAfterEvent: true
+
+dbServer:
+  ip: 127.0.0.1
+  port: 5683
+  id: db_user_name
+  auth: secret_password
+
+tableData:
+  - tableName: name string
+
+
+

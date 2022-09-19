@@ -13,10 +13,13 @@ import (
 )
 
 var cfgFile string
+var maxItems int
+var maxVarience int
+var timeInterval int
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "hexa_tele-gen",
+	Use:   "hx-gen",
 	Short: "Reads from a given config file or terinal flags and then creates a set of time based test data",
 	Long: `Given a config file will read the values and then generate test data
 
@@ -42,7 +45,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hexa_tele-gen.yaml)")
+	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hx-gen.yaml)")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
@@ -62,7 +65,7 @@ func initConfig() {
 		// Search config in home directory with name ".hexa_tele" (without extension).
 		viper.AddConfigPath(home)
 		viper.SetConfigType("yaml")
-		viper.SetConfigName(".hexa_tele-gen")
+		viper.SetConfigName(".hx-gen")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match

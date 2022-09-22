@@ -11,22 +11,25 @@ import (
 )
 
 // genTimeStampsCmd represents the genTimeStamps command
-var genTimeStampsCmd = &cobra.Command{
-	Use:   "genTimeStamps",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+var genTimeLine = &cobra.Command{
+	Use:   "genTimeLine",
+	Short: "Generates a timeline from a config file",
+	Long: `Uses a config yml file to generate a time line data
+	structure.
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Useage: hx-gen genTimeLine [-c, --config] myConfig.yaml/.yml
+	
+	If no config file is passed will look in the default dirs as follow:
+	$HOME/hx-gen-config.yml
+	$PWD/hx-gen-config.yml`,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("genTimeStamps called")
+		fmt.Println("genTimeLine called")
+		fmt.Printf("max Intervals: %d", maxIntervals)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(genTimeStampsCmd)
+	rootCmd.AddCommand(genTimeLine)
 
 	// Here you will define your flags and configuration settings.
 

@@ -12,22 +12,24 @@ import (
 	"github.com/spf13/viper"
 )
 
-var cfgFile string
-var maxItems int
-var maxVarience int
-var timeInterval int
+var (
+	cfgFile      string
+	maxIntervals int
+	maxVarience  int
+	timeInterval int
 
-// rootCmd represents the base command when called without any subcommands
-var rootCmd = &cobra.Command{
-	Use:   "hx-gen",
-	Short: "Reads from a given config file or terinal flags and then creates a set of time based test data",
-	Long: `Given a config file will read the values and then generate test data
+	// rootCmd represents the base command when called without any subcommands
+	rootCmd = &cobra.Command{
+		Use:   "hx-gen",
+		Short: "Reads from a given config file or terinal flags and then creates a set of time based test data",
+		Long: `Given a config file will read the values and then generate test data
 
 	This can then be passed into a data base to create a set of test data.`,
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
-	// Run: func(cmd *cobra.Command, args []string) { },
-}
+		// Uncomment the following line if your bare application
+		// has an action associated with it:
+		// Run: func(cmd *cobra.Command, args []string) { },
+	}
+)
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
@@ -41,31 +43,28 @@ func Execute() {
 func init() {
 	cobra.OnInitialize(initConfig)
 
-	// Here you will define your flags and configuration settings.
+	// Global flags and configuration settings.
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
-
-	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.hx-gen.yaml)")
-
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
+	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (defaults to [$HOME/hexa-gen.yaml, $CWD/configs/hexa-gen.yml)")
+	rootCmd.PersistentFlags().IntVarP(&maxIntervals, "maxIntervals", "I", 100, "The max number of time intervals to use")
+	viper.BindPFlag("maxIntervals", rootCmd.PersistentFlags().Lookup("timeLine.maxIntervals"))
 	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
-// initConfig reads in config file and ENV variables if set.
 func initConfig() {
 	if cfgFile != "" {
-		// Use config file from the flag.
 		viper.SetConfigFile(cfgFile)
 	} else {
-		// Find home directory.
 		home, err := os.UserHomeDir()
+		pwd, err := os.Getwd()
 		cobra.CheckErr(err)
 
-		// Search config in home directory with name ".hexa_tele" (without extension).
 		viper.AddConfigPath(home)
-		viper.SetConfigType("yaml")
-		viper.SetConfigName(".hx-gen")
+		viper.AddConfigPath(pwd)
+		viper.SetConfigType("yml")
+		viper.SetConfigName("hexa-gen")
+		viper.AddConfigPath("../configs/")
 	}
 
 	viper.AutomaticEnv() // read in environment variables that match
@@ -73,5 +72,11 @@ func initConfig() {
 	// If a config file is found, read it in.
 	if err := viper.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config file:", viper.ConfigFileUsed())
+	} else {
+		fmt.Println("No config file found...")
 	}
+
+	// bind global vars
+	maxIntervals = viper.GetInt("timeLine.maxIntervals")
+	cfgFile = viper.ConfigFileUsed()
 }

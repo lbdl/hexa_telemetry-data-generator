@@ -11,10 +11,11 @@ import (
 )
 
 // genTimeStampsCmd represents the genTimeStamps command
-var genTimeLine = &cobra.Command{
-	Use:   "genTimeLine",
-	Short: "Generates a timeline from a config file",
-	Long: `Uses a config yml file to generate a time line data
+var (
+	genTimeLine = &cobra.Command{
+		Use:   "genTimeLine",
+		Short: "Generates a timeline from a config file",
+		Long: `Uses a config yml file to generate a time line data
 	structure.
 
 	Useage: hx-gen genTimeLine [-c, --config] myConfig.yaml/.yml
@@ -22,15 +23,26 @@ var genTimeLine = &cobra.Command{
 	If no config file is passed will look in the default dirs as follow:
 	$HOME/hx-gen-config.yml
 	$PWD/hx-gen-config.yml`,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("genTimeLine called")
-		fmt.Printf("max Intervals: %d", maxIntervals)
-	},
-}
+		Run: func(cmd *cobra.Command, args []string) {
+			fmt.Println("max Intervals: ", maxIntervals)
+			fmt.Println("startTime: ", startTime)
+			fmt.Println("interval: ", baseInterval)
+			fmt.Println("drift: ", driftFactor)
+			fmt.Println("data: ", dType)
+		},
+	}
+	startTime    string
+	maxIntervals int
+	baseInterval string
+	driftFactor  float64
+	maxDrift     float64
+	dType        string
+)
 
 func init() {
 	rootCmd.AddCommand(genTimeLine)
 
+	//dType = viper.GetString("timeLine.eventDataType[0].typeName")
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command

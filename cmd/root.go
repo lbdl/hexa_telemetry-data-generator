@@ -13,10 +13,8 @@ import (
 )
 
 var (
-	cfgFile      string
-	maxIntervals int
-	maxVarience  int
-	timeInterval int
+	cfgFile   string
+	dbCfgFile string
 
 	// rootCmd represents the base command when called without any subcommands
 	rootCmd = &cobra.Command{
@@ -44,12 +42,11 @@ func init() {
 	cobra.OnInitialize(initConfig)
 
 	// Global flags and configuration settings.
-	// Cobra supports persistent flags, which, if defined here,
-	// will be global for your application.
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (defaults to [$HOME/hexa-gen.yaml, $CWD/configs/hexa-gen.yml)")
-	rootCmd.PersistentFlags().IntVarP(&maxIntervals, "maxIntervals", "I", 100, "The max number of time intervals to use")
-	viper.BindPFlag("maxIntervals", rootCmd.PersistentFlags().Lookup("timeLine.maxIntervals"))
-	rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	rootCmd.PersistentFlags().StringVarP(&dbCfgFile, "dbconf", "d", "", "db config file (defaults to [$HOME/db_conf.yaml, $CWD/configs/db_conf.yml)")
+	//rootCmd.PersistentFlags().IntVarP(&maxIntervals, "maxIntervals", "I", 100, "The max number of time intervals to use")
+	//viper.BindPFlag("maxIntervals", rootCmd.PersistentFlags().Lookup("timeLine.maxIntervals"))
+	//rootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 }
 
 func initConfig() {
@@ -77,6 +74,9 @@ func initConfig() {
 	}
 
 	// bind global vars
-	maxIntervals = viper.GetInt("timeLine.maxIntervals")
 	cfgFile = viper.ConfigFileUsed()
+	startTime = viper.GetString("timeLine.startTime")
+	maxIntervals = viper.GetInt("timeLine.maxIntervals")
+	baseInterval = viper.GetString("timeLine.timeInterval")
+	driftFactor = viper.GetFloat64("timeLine.driftFactor")
 }

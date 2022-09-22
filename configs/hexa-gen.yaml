@@ -21,9 +21,9 @@ timeLine:
   eventDataType:
     - typeName: fooData
       initialValue: 5.67
-  startTime:  "time string"
+  startTime: time string
   maxIntervals: 10000
-  timeIntervalSeconds: 600
+  timeInterval: 10m
   driftFactor: 0.01
   maxAllowedDrift: 0.1 
   eventBlocks:

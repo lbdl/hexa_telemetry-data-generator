@@ -1,18 +1,20 @@
 /*
-Copyright © 2022 NAME HERE <EMAIL ADDRESS>
+Copyright © 2022 lbdl: timstorey@hexaponics.com
 
 */
 package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
+	"github.com/spf13/viper"
 )
 
 // genTimeStampsCmd represents the genTimeStamps command
 var (
-	genTimeLine = &cobra.Command{
+	genTimeLineCmd = &cobra.Command{
 		Use:   "genTimeLine",
 		Short: "Generates a timeline from a config file",
 		Long: `Uses a config yml file to generate a time line data
@@ -24,11 +26,12 @@ var (
 	$HOME/hx-gen-config.yml
 	$PWD/hx-gen-config.yml`,
 		Run: func(cmd *cobra.Command, args []string) {
-			fmt.Println("max Intervals: ", maxIntervals)
-			fmt.Println("startTime: ", startTime)
-			fmt.Println("interval: ", baseInterval)
-			fmt.Println("drift: ", driftFactor)
-			fmt.Println("data: ", dType)
+			printConf()
+		},
+		PreRun: func(cmd *cobra.Command, args []string) {
+			fmt.Printf("Inside rootCmd PreRun with args: %v\n", args)
+			readConf()
+			parseConf()
 		},
 	}
 	startTime    string
@@ -36,20 +39,49 @@ var (
 	baseInterval string
 	driftFactor  float64
 	maxDrift     float64
-	dType        string
+	dType        []map[string]interface{}
 )
 
 func init() {
-	rootCmd.AddCommand(genTimeLine)
+	// add pFlags here if needed
+	rootCmd.AddCommand(genTimeLineCmd)
+}
 
-	//dType = viper.GetString("timeLine.eventDataType[0].typeName")
-	// Here you will define your flags and configuration settings.
+func printConf() {
+	fmt.Println("max Intervals: ", maxIntervals)
+	fmt.Println("startTime: ", startTime)
+	fmt.Println("interval: ", baseInterval)
+	fmt.Println("drift: ", driftFactor)
+	fmt.Println("data: ", dType)
+}
 
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// genTimeStampsCmd.PersistentFlags().String("foo", "", "A help for foo")
+func parseConf() {
 
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// genTimeStampsCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+}
+
+func readConf() {
+	v := viper.New()
+	if cfgFile != "" {
+		v.SetConfigFile(cfgFile)
+	} else {
+		pwd, err := os.UserHomeDir()
+		home, err := os.Getwd()
+		cobra.CheckErr(err)
+
+		v.AddConfigPath(home)
+		v.AddConfigPath(pwd)
+		v.SetConfigType("yml")
+
+		// default config which we really should
+		// get from the flasg but we aren't right now
+		v.SetConfigName("hexa-gen")
+		v.AddConfigPath("../configs/")
+	}
+
+	if err := v.ReadInConfig(); err == nil {
+		fmt.Fprintln(os.Stderr, "Using config:", v.ConfigFileUsed())
+	} else {
+		fmt.Println("No config file found")
+	}
+
 }

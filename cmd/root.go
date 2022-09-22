@@ -1,5 +1,5 @@
 /*
-Copyright © 2022 timstorey@hexaponics.com
+Copyright © 2022 lbdl: timstorey@hexaponics.com
 
 */
 package cmd
@@ -39,7 +39,7 @@ func Execute() {
 }
 
 func init() {
-	cobra.OnInitialize(initConfig)
+	//cobra.OnInitialize(initConfig)
 
 	// Global flags and configuration settings.
 	rootCmd.PersistentFlags().StringVarP(&cfgFile, "config", "c", "", "config file (defaults to [$HOME/hexa-gen.yaml, $CWD/configs/hexa-gen.yml)")

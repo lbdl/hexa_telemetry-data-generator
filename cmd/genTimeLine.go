@@ -14,6 +14,14 @@ import (
 
 // genTimeStampsCmd represents the genTimeStamps command
 var (
+	v            *viper.Viper
+	startTime    string
+	maxIntervals int
+	baseInterval string
+	driftFactor  float64
+	maxDrift     float64
+	dType        []map[string]interface{}
+
 	genTimeLineCmd = &cobra.Command{
 		Use:   "genTimeLine",
 		Short: "Generates a timeline from a config file",
@@ -29,17 +37,11 @@ var (
 			printConf()
 		},
 		PreRun: func(cmd *cobra.Command, args []string) {
-			fmt.Printf("Inside rootCmd PreRun with args: %v\n", args)
-			readConf()
-			parseConf()
+			v = viper.New()
+			readConf(v)
+			parseConf(v)
 		},
 	}
-	startTime    string
-	maxIntervals int
-	baseInterval string
-	driftFactor  float64
-	maxDrift     float64
-	dType        []map[string]interface{}
 )
 
 func init() {
@@ -55,12 +57,15 @@ func printConf() {
 	fmt.Println("data: ", dType)
 }
 
-func parseConf() {
-
+func parseConf(v *viper.Viper) {
+	cfgFile = v.ConfigFileUsed()
+	startTime = v.GetString("timeLine.startTime")
+	maxIntervals = v.GetInt("timeLine.maxIntervals")
+	baseInterval = v.GetString("timeLine.timeInterval")
+	driftFactor = v.GetFloat64("timeLine.driftFactor")
 }
 
-func readConf() {
-	v := viper.New()
+func readConf(v *viper.Viper) {
 	if cfgFile != "" {
 		v.SetConfigFile(cfgFile)
 	} else {
@@ -83,5 +88,4 @@ func readConf() {
 	} else {
 		fmt.Println("No config file found")
 	}
-
 }

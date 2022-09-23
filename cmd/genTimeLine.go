@@ -1,20 +1,20 @@
 /*
 Copyright © 2022 lbdl: timstorey@hexaponics.com
-
 */
 package cmd
 
 import (
 	"fmt"
-	"os"
-
+	"github.com/lbdl/hexa_tele/app/types"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"os"
 )
 
 // genTimeStampsCmd represents the genTimeStamps command
 var (
 	v            *viper.Viper
+	tl           types.TimeLine
 	startTime    string
 	maxIntervals int
 	baseInterval string
@@ -55,6 +55,9 @@ func printConf() {
 	fmt.Println("interval: ", baseInterval)
 	fmt.Println("drift: ", driftFactor)
 	fmt.Println("data: ", dType)
+
+	line := tl.TimeLine.StartTime
+	fmt.Println("ting ", line)
 }
 
 func parseConf(v *viper.Viper) {
@@ -63,6 +66,7 @@ func parseConf(v *viper.Viper) {
 	maxIntervals = v.GetInt("timeLine.maxIntervals")
 	baseInterval = v.GetString("timeLine.timeInterval")
 	driftFactor = v.GetFloat64("timeLine.driftFactor")
+	tl = tl.ParseToStruct(v)
 }
 
 func readConf(v *viper.Viper) {
@@ -86,6 +90,6 @@ func readConf(v *viper.Viper) {
 	if err := v.ReadInConfig(); err == nil {
 		fmt.Fprintln(os.Stderr, "Using config:", v.ConfigFileUsed())
 	} else {
-		fmt.Println("No config file found")
+		cobra.CheckErr(err)
 	}
 }

@@ -17,31 +17,30 @@
 # each timeLine can be only one data type but there can be mutiple
 # timeLines, just define a new config following the same format.
 
-timeLine:
-  eventDataType:
-    - typeName: fooData
-      initialValue: 5.67
-  startTime: time string
-  maxIntervals: 10000
-  timeInterval: 10m
-  driftFactor: 0.01
-  maxAllowedDrift: 0.1 
-  eventBlocks:
-    - startOffset: 0.1
-      endOffset: 
-      driftFactor:
-      maxAllowedDrift: 
-      timeIntervalSeconds:
-      resetAfterEvent: true
-
-dbServer:
-  ip: 127.0.0.1
-  port: 5683
-  id: db_user_name
-  auth: secret_password
-
-tableData:
-  - tableName: name string
-
-
-
+# TODO refactor to use anchors and overrides...
+timeLines:
+  dataXPOS: &timeline_definition
+    startTime: time string
+    timeInterval: 10m
+    maxIntervals: 10000
+    initialValue: 5.67
+    driftFactor: 0.01
+    maxAllowedDrift: 0.1
+    eventBlocks:
+      event1: &eventblock_definition
+        eventName: drift in x
+        startOffset: 0.1
+        endOffset:
+        driftFactor:
+        maxAllowedDrift:
+        timeIntervalSeconds:
+        resetAfterEvent: true
+  YPOSData:
+    <<: *timeline_definition
+    initialValue: 6.21
+    driftFactor: 0.2
+    eventBlocks:
+      event1:
+        <<: *eventblock_definition
+        eventName: drift in Y
+        startOffset: 0.5

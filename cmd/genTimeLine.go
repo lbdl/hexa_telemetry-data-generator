@@ -77,19 +77,15 @@ func readConf(v *viper.Viper) {
 		home, err := os.Getwd()
 		cobra.CheckErr(err)
 
+		// some defaults and search paths
 		v.AddConfigPath(home)
 		v.AddConfigPath(pwd)
 		v.SetConfigType("yml")
-
-		// default config which we really should
-		// get from the flasg but we aren't right now
 		v.SetConfigName("hexa-gen")
 		v.AddConfigPath("../configs/")
 	}
 
-	if err := v.ReadInConfig(); err == nil {
-		fmt.Fprintln(os.Stderr, "Using config:", v.ConfigFileUsed())
-	} else {
-		cobra.CheckErr(err)
-	}
+	err := v.ReadInConfig()
+	cobra.CheckErr(err)
+	fmt.Fprintln(os.Stderr, "Using config:", v.ConfigFileUsed())
 }

@@ -14,8 +14,8 @@
 # would represent 1 interval because 1000/100/10 = 1 so the 
 # eventBlock would begin after 1 timeIntervalSeconds had passed.
 #
-# each timeLine can be only one data type but there can be mutiple
-# timeLines, just define a new config following the same format.
+# each timeLine can be only one data type but there can be multiple
+# timeLines, just add a new block
 
 # TODO refactor to use anchors and overrides...
 timeLines:
@@ -33,7 +33,7 @@ timeLines:
         endOffset:
         driftFactor:
         maxAllowedDrift:
-        timeIntervalSeconds:
+        timeInterval:
         resetAfterEvent: true
   YPOSData:
     <<: *timeline_definition

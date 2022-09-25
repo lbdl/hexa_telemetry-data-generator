@@ -50,22 +50,13 @@ func init() {
 }
 
 func printConf() {
-	fmt.Println("max Intervals: ", maxIntervals)
-	fmt.Println("startTime: ", startTime)
-	fmt.Println("interval: ", baseInterval)
-	fmt.Println("drift: ", driftFactor)
-	fmt.Println("data: ", dType)
-
-	line := tl.TimeLine.StartTime
-	fmt.Println("ting ", line)
+	for key, _ := range tl.TimeLines {
+		fmt.Println(key)
+	}
 }
 
 func parseConf(v *viper.Viper) {
 	cfgFile = v.ConfigFileUsed()
-	startTime = v.GetString("timeLine.startTime")
-	maxIntervals = v.GetInt("timeLine.maxIntervals")
-	baseInterval = v.GetString("timeLine.timeInterval")
-	driftFactor = v.GetFloat64("timeLine.driftFactor")
 	tl = tl.ParseToStruct(v)
 }
 
@@ -82,7 +73,7 @@ func readConf(v *viper.Viper) {
 		v.AddConfigPath(pwd)
 		v.SetConfigType("yml")
 		v.SetConfigName("hexa-gen")
-		v.AddConfigPath("../configs/")
+		v.AddConfigPath("configs/")
 	}
 
 	err := v.ReadInConfig()

@@ -7,23 +7,29 @@ import (
 )
 
 type TimeLine struct {
-	TimeLine struct {
-		StartTime       time.Time     `yaml:"startTime"`
-		MaxIntervals    int           `yaml:"maxIntervals"`
-		TimeInterval    time.Duration `yaml:"timeInterval"`
-		DriftFactor     float64       `yaml:"driftFactor"`
-		InitialValue    float64       `yaml:"initialValue"`
-		MaxAllowedDrift float64       `yaml:"maxAllowedDrift"`
-		EventBlocks     []struct {
-			EventName       string        `yaml:"eventName"`
-			StartOffset     float64       `yaml:"startOffset"`
-			EndOffset       float64       `yaml:"endOffset"`
-			DriftFactor     float64       `yaml:"driftFactor"`
-			MaxAllowedDrift float64       `yaml:"maxAllowedDrift"`
-			TimeInterval    time.Duration `yaml:"timeInterval"`
-			ResetAfterEvent bool          `yaml:"resetAfterEvent"`
-		} `yaml:"eventBlocks"`
-	} `yaml:"timeLine"`
+	TimeLines map[string]TLine `mapstructure:"timeLines"`
+}
+
+type TLine struct {
+	DataFieldName   string
+	DataFieldType   string
+	StartTime       time.Time
+	TimeInterval    time.Duration
+	MaxIntervals    int
+	InitialValue    float64
+	DriftFactor     float64
+	MaxAllowedDrift float64
+	Events          map[string]Event `mapstructure:"eventBlocks"`
+}
+
+type Event struct {
+	EventName       string
+	StartOffset     float64
+	EndOffset       float64
+	DriftFactor     float64
+	MaxAllowedDrift float64
+	TimeInterval    time.Duration
+	ResetAfterEvent bool
 }
 
 func (t TimeLine) ParseToStruct(v *viper.Viper) TimeLine {

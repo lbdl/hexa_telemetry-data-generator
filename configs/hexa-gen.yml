@@ -19,28 +19,34 @@
 
 # TODO refactor to use anchors and overrides...
 timeLines:
-  dataXPOS: &timeline_definition
-    startTime: time string
+  default: &defaults
+    dataFieldName: x_pos
+    dataFieldType: positional coord
+    startTime: 2006-01-02T15:04:05+07:00
     timeInterval: 10m
     maxIntervals: 10000
     initialValue: 5.67
     driftFactor: 0.01
     maxAllowedDrift: 0.1
-    eventBlocks:
-      event1: &eventblock_definition
+    eventBlocks: &eventblock_defaults
+      event: &e_default
         eventName: drift in x
         startOffset: 0.1
-        endOffset:
-        driftFactor:
-        maxAllowedDrift:
-        timeInterval:
+        endOffset: 0.2
+        driftFactor: 0.5
+        maxAllowedDrift: 1
+        timeInterval: 5m
         resetAfterEvent: true
-  YPOSData:
-    <<: *timeline_definition
+      event2:
+        <<: *e_default
+        eventName: drift in y
+  y_pos:
+    <<: *defaults
+    dataFieldName: y_pos
     initialValue: 6.21
     driftFactor: 0.2
     eventBlocks:
-      event1:
-        <<: *eventblock_definition
-        eventName: drift in Y
-        startOffset: 0.5
+      <<: *eventblock_defaults
+      event3:
+        <<: *e_default
+

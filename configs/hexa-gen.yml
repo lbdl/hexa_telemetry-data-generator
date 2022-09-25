@@ -39,7 +39,7 @@ timeLines:
         resetAfterEvent: true
       event2:
         <<: *e_default
-        eventName: drift in y
+        startOffset: 10
   y_pos:
     <<: *defaults
     dataFieldName: y_pos
@@ -47,6 +47,16 @@ timeLines:
     driftFactor: 0.2
     eventBlocks:
       <<: *eventblock_defaults
-      event3:
+      event:
         <<: *e_default
+        eventName: &name drift in x
+        startOffset: 1
+      event2:
+        <<: [*e_default]
+        startOffset: 5
+        eventName: *name
+      event3:
+        <<: [*e_default]
+        startOffset: 10
+        eventName: *name
 

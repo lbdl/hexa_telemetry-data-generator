@@ -5,7 +5,8 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/lbdl/hexa_tele/app/types"
+	"github.com/lbdl/hexa_tele/lib/generators"
+	"github.com/lbdl/hexa_tele/lib/types"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"os"
@@ -13,14 +14,8 @@ import (
 
 // genTimeStampsCmd represents the genTimeStamps command
 var (
-	v            *viper.Viper
-	tl           types.TimeLine
-	startTime    string
-	maxIntervals int
-	baseInterval string
-	driftFactor  float64
-	maxDrift     float64
-	dType        []map[string]interface{}
+	v  *viper.Viper
+	tl types.TimeLine
 
 	genTimeLineCmd = &cobra.Command{
 		Use:   "genTimeLine",
@@ -50,9 +45,7 @@ func init() {
 }
 
 func printConf() {
-	for key, _ := range tl.TimeLines {
-		fmt.Println(key)
-	}
+	generators.GenerateTelemetry(tl)
 }
 
 func parseConf(v *viper.Viper) {

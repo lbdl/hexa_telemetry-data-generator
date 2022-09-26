@@ -15,7 +15,7 @@ type TLine struct {
 	DataFieldType   string
 	StartTime       time.Time
 	TimeInterval    time.Duration
-	MaxIntervals    int
+	DataPoints      int
 	InitialValue    float64
 	DriftFactor     float64
 	MaxAllowedDrift float64
